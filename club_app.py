@@ -29,7 +29,7 @@ if st.button("天気情報を取得する"):
         longitude = locations[location]["lon"]
         current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
-            st.write(f"{location}の現在の気象情報:")
+            st.subheader(f"{location}の現在の気象情報:")
             for key, value in current_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
@@ -47,7 +47,7 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
         longitude = locations[location]["lon"]
         tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
         if isinstance(tomorrow_weather_info, dict):
-            st.write(f"{location}の{hours_ahead}時間後の気象情報:")
+            st.subheader(f"{location}の{hours_ahead}時間後の気象情報:")
             for key, value in tomorrow_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
