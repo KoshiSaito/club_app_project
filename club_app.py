@@ -41,7 +41,7 @@ if st.button("現在の天気情報を取得する"):
         current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
             session_state.current_weather_info = current_weather_info
-            for key, value in current_weather_info.items():
+            for key, value in session_state.current_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
             st.write(f"Google Map URL: {google_map_url}")
@@ -60,7 +60,7 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
         tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
         if isinstance(tomorrow_weather_info, dict):
             session_state.tomorrow_weather_info = tomorrow_weather_info
-            for key, value in tomorrow_weather_info.items():
+            for key, value in session_state.tomorrow_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
             st.write(f"Google Map URL: {google_map_url}")
