@@ -40,6 +40,39 @@ def get_current_weather_info(latitude, longitude, api_key):
         }
     else:
         return "Failed to retrieve current weather information."
+    
+def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
+    url = "https://api.openweathermap.org/data/2.5/forecast"
+    params = {
+        "lat": latitude,
+        "lon": longitude,
+        "appid": api_key,
+        "units": "metric",
+        "lang": "ja",
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        # OpenWeatherMapの予報は3時間ごとのため、hours_aheadを3で割ってインデックスを計算
+        index = hours_ahead // 3
+        if index < len(data['list']):
+            forecast = data['list'][index]
+            weather = forecast['weather'][0]['description']
+            temperature = forecast['main']['temp']
+            wind_speed = forecast['wind']['speed']
+            wind_direction = convert_wind_direction(forecast['wind']['deg'])
+            timestamp = datetime.fromtimestamp(forecast['dt']).strftime('%Y-%m-%d %H:%M:%S')
+            return {
+                "Tomorrow Weather": weather,
+                "Tomorrow Temperature": f"{temperature} ℃",
+                "Tomorrow Wind Speed": f"{wind_speed} m/s",
+                "Tomorrow Wind Direction": wind_direction,
+                "Tomorrow Timestamp": timestamp
+            }
+        else:
+            return "Failed to retrieve weather information."
+    else:
+        return "Failed to retrieve weather information."
 
 def generate_google_map_url(latitude, longitude):
     return f"https://www.google.com/maps?q={latitude},{longitude}"
@@ -53,6 +86,7 @@ locations = {
     "札幌": {"lat": 43.062096, "lon": 141.354376},
     "海づり公園": {"lat": 33.627800, "lon": 130.227800},
     "松原北": {"lat": 33.578277, "lon": 130.144815},
+    "地球": {"lat": 0, "lon": 0}
 }
 
 # streamlitアプリケーションの設定
@@ -73,6 +107,24 @@ if st.button("天気情報を取得する"):
         if isinstance(current_weather_info, dict):
             st.write(f"{location}の現在の気象情報:")
             for key, value in current_weather_info.items():
+                st.write(f"{key}: {value}")
+            google_map_url = generate_google_map_url(latitude, longitude)
+            st.write(f"Google Map URL: {google_map_url}")
+        else:
+            st.error("天気情報の取得に失敗しました。")
+    else:
+        st.warning("地域を選択してください。")
+
+# n時間後の天気情報の取得と表示
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 1, 24, 3)
+if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
+    if location:
+        latitude = locations[location]["lat"]
+        longitude = locations[location]["lon"]
+        future_weather_info = get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
+        if isinstance(future_weather_info, dict):
+            st.write(f"{location}の{hours_ahead}時間後の気象情報:")
+            for key, value in future_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = generate_google_map_url(latitude, longitude)
             st.write(f"Google Map URL: {google_map_url}")
