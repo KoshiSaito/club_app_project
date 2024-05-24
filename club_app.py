@@ -68,9 +68,3 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
             st.error("天気情報の取得に失敗しました。")
     else:
         st.warning("地域を選択してください。")
-
-session_state.tomorrow_weather_info = tomorrow_weather_info
-for key, value in session_state.tomorrow_weather_info.items():
-      st.write(f"{key}: {value}")
-      google_map_url = wf.generate_google_map_url(latitude, longitude)
-      st.write(f"Google Map URL: {google_map_url}")
