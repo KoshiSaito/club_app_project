@@ -119,7 +119,7 @@ if st.button("天気情報を取得する"):
         st.warning("地域を選択してください。")
 
 # n時間後の天気情報の取得と表示 0時間後の天気情報は現在の天気情報と同じ
-hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0)
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3) # 引数: (ラベル, 最小値, 最大値, 初期値)
 if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
     if location:
         latitude = locations[location]["lat"]
