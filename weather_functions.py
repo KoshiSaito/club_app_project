@@ -4,13 +4,11 @@ import random
 import streamlit as st
 
 # 関数定義
-@st.cache
 def convert_wind_direction(deg):
     directions = ["北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西"]
     index = round((deg % 360) / 22.5)
     return directions[index % 16]
 
-@st.cache
 def get_current_weather_info(latitude, longitude, api_key):
     url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
@@ -43,7 +41,6 @@ def get_current_weather_info(latitude, longitude, api_key):
     else:
         return "Failed to retrieve current weather information."
     
-@st.cache
 def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
     url = "https://api.openweathermap.org/data/2.5/forecast"
     params = {
@@ -80,7 +77,6 @@ def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
     else:
         return "Failed to retrieve weather information."
     
-@st.cache
 def generate_google_map_url(latitude, longitude):
     return f"https://www.google.com/maps?q={latitude},{longitude}"
 
