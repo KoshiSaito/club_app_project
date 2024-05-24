@@ -54,20 +54,23 @@ def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
     if response.status_code == 200:
         data = response.json()
         # OpenWeatherMapの予報は3時間ごとのため、hours_aheadを3で割ってインデックスを計算
-        index = hours_ahead // 3
+        index = hours_ahead // 3 # 3時間ごとの予報
         if index < len(data['list']):
             forecast = data['list'][index]
             weather = forecast['weather'][0]['description']
             temperature = forecast['main']['temp']
             wind_speed = forecast['wind']['speed']
             wind_direction = convert_wind_direction(forecast['wind']['deg'])
-            timestamp = datetime.fromtimestamp(forecast['dt']).strftime('%Y-%m-%d %H:%M:%S')
+            # タイムスタンプを日本標準時 (JST) に変換
+            utc_timestamp = datetime.fromtimestamp(forecast['dt'])
+            jst_timestamp = utc_timestamp + timedelta(hours=9)
+            tomorrow_timestamp = jst_timestamp.strftime('%Y-%m-%d %H:%M:%S')
             return {
                 "Tomorrow Weather": weather,
                 "Tomorrow Temperature": f"{temperature} ℃",
                 "Tomorrow Wind Speed": f"{wind_speed} m/s",
                 "Tomorrow Wind Direction": wind_direction,
-                "Tomorrow Timestamp": timestamp
+                "Tomorrow Timestamp": tomorrow_timestamp
             }
         else:
             return "Failed to retrieve weather information."
@@ -115,16 +118,16 @@ if st.button("天気情報を取得する"):
     else:
         st.warning("地域を選択してください。")
 
-# n時間後の天気情報の取得と表示
-hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 1, 24, 3)
+# n時間後の天気情報の取得と表示 0時間後の天気情報は現在の天気情報と同じ
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0)
 if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
     if location:
         latitude = locations[location]["lat"]
         longitude = locations[location]["lon"]
-        future_weather_info = get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
-        if isinstance(future_weather_info, dict):
+        tomorrow_weather_info = get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
+        if isinstance(tomorrow_weather_info, dict):
             st.write(f"{location}の{hours_ahead}時間後の気象情報:")
-            for key, value in future_weather_info.items():
+            for key, value in tomorrow_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = generate_google_map_url(latitude, longitude)
             st.write(f"Google Map URL: {google_map_url}")
