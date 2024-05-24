@@ -55,7 +55,7 @@ if st.button("現在の天気情報を取得する", key=1) or st.session_state.
 
 # n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
-hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 1, 24, 3)
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 1, 24, 3, step=3)
 # n時間後の天気情報を取得するボタン ボタンの表示は入力によって変わる
 if st.button(f"{hours_ahead}時間後の天気情報を取得する") or st.session_state.count2 == 1:
     st.session_state.count2 = 1
