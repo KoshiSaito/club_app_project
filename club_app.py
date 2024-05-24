@@ -47,8 +47,11 @@ if st.button("現在の天気情報を取得する", key=1) or st.session_state.
             session_state.current_weather_info[selected_location] = current_weather_info
             for key, value in session_state.current_weather_info[selected_location].items():
                 st.write(f"{key}: {value}")
+            # google mapの埋め込み
+            st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")
         else:
             st.error("天気情報の取得に失敗しました。")
+
 
 # n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
@@ -63,5 +66,7 @@ if st.button("n時間後の天気情報を取得する", key=2) or st.session_st
             session_state.tomorrow_weather_info[selected_location] = tomorrow_weather_info
             for key, value in session_state.tomorrow_weather_info[selected_location].items():
                 st.write(f"{key}: {value}")
+            # google mapの埋め込み
+            st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")
         else:
             st.error("天気情報の取得に失敗しました。")
