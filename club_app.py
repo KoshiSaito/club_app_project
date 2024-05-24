@@ -48,7 +48,7 @@ if st.button("現在の天気情報を取得する", key=1) or st.session_state.
             for key, value in session_state.current_weather_info[selected_location].items():
                 st.write(f"{key}: {value}")
             # iconの表示
-            st.image(session_state.current_weather_info[selected_location]["Current Weather Icon"], use_column_width=True)
+            st.image(session_state.current_weather_info[selected_location]["Current Weather Icon"], width=100)
             # google mapの埋め込み
             st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")
         else:
