@@ -1,6 +1,16 @@
 import streamlit as st
 import weather_functions as wf
 
+# Streamlitのセッション状態を取得
+session_state = st.session_state
+
+# セッション状態が初期化されていない場合は初期化する
+if 'current_weather_info' not in session_state:
+    session_state.current_weather_info = None
+
+if 'tomorrow_weather_info' not in session_state:
+    session_state.tomorrow_weather_info = None
+
 # 地域名と緯度・経度の対応辞書
 locations = {
     "東京": {"lat": 35.682839, "lon": 139.759455},
@@ -30,6 +40,7 @@ if st.button("現在の天気情報を取得する"):
         longitude = locations[location]["lon"]
         current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
+            session_state.current_weather_info = current_weather_info
             for key, value in current_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
@@ -39,7 +50,7 @@ if st.button("現在の天気情報を取得する"):
     else:
         st.warning("地域を選択してください。")
 
-# n時間後の天気情報を表示する領域　再びボタンを押さない限り表示結果をそのまま表示し続けたい場合
+# n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
 hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)
 if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
@@ -48,6 +59,7 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
         longitude = locations[location]["lon"]
         tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
         if isinstance(tomorrow_weather_info, dict):
+            session_state.tomorrow_weather_info = tomorrow_weather_info
             for key, value in tomorrow_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
@@ -56,12 +68,3 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
             st.error("天気情報の取得に失敗しました。")
     else:
         st.warning("地域を選択してください。")
-
-
-# おみくじ
-st.header("おみくじ")
-if st.button("おみくじを引く"):
-    fortune = wf.get_fortune()
-    st.write(fortune)
-
-

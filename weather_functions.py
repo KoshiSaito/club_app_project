@@ -4,6 +4,7 @@ import random
 import streamlit as st
 
 # 関数定義
+@st.cache
 def convert_wind_direction(deg):
     directions = ["北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西"]
     index = round((deg % 360) / 22.5)
@@ -78,7 +79,8 @@ def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
             return "Failed to retrieve weather information."
     else:
         return "Failed to retrieve weather information."
-
+    
+@st.cache
 def generate_google_map_url(latitude, longitude):
     return f"https://www.google.com/maps?q={latitude},{longitude}"
 
