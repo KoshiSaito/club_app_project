@@ -48,7 +48,7 @@ latitude = st.text_input("緯度を入力してください")
 longitude = st.text_input("経度を入力してください")
 
 # APIキーの取得
-openweathermap_api_key = os.environ.get('OPENWEATHERMAP_API_KEY')
+openweathermap_api_key = st.secrets["API_KEY"]
 
 # 天気情報の取得と表示
 if st.button("天気情報を取得する"):
