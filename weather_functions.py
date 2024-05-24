@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 import random
+import streamlit as st
 
 # 関数定義
 def convert_wind_direction(deg):
@@ -8,6 +9,7 @@ def convert_wind_direction(deg):
     index = round((deg % 360) / 22.5)
     return directions[index % 16]
 
+@st.cache
 def get_current_weather_info(latitude, longitude, api_key):
     url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
@@ -40,6 +42,7 @@ def get_current_weather_info(latitude, longitude, api_key):
     else:
         return "Failed to retrieve current weather information."
     
+@st.cache
 def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
     url = "https://api.openweathermap.org/data/2.5/forecast"
     params = {
