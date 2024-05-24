@@ -9,6 +9,10 @@ if 'current_weather_info' not in session_state:
     session_state.current_weather_info = {}
 if 'tomorrow_weather_info' not in session_state:
     session_state.tomorrow_weather_info = {}
+if 'count1' not in st.session_state: 
+	st.session_state.count1 = 0 #countがsession_stateに追加されていない場合，0で初期化
+if 'count2' not in st.session_state: 
+	st.session_state.count2 = 0 #countがsession_stateに追加されていない場合，0で初期化
 
 # 地域名と緯度・経度の対応辞書
 locations = {
@@ -33,28 +37,31 @@ openweathermap_api_key = st.secrets['club']["API_KEY"]
 
 # 現在の天気情報を表示する領域
 st.header("現在の天気情報")
-# if st.button("現在の天気情報を取得する", key=1):
-if selected_location:
-    latitude = locations[selected_location]["lat"]
-    longitude = locations[selected_location]["lon"]
-    current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
-    if isinstance(current_weather_info, dict):
-        session_state.current_weather_info[selected_location] = current_weather_info
-        for key, value in session_state.current_weather_info[selected_location].items():
-            st.write(f"{key}: {value}")
-    else:
-        st.error("天気情報の取得に失敗しました。")
+if st.button("現在の天気情報を取得する", key=1) or st.session_state.count1 == 1:
+    st.session_state.count1 = 1
+    if selected_location:
+        latitude = locations[selected_location]["lat"]
+        longitude = locations[selected_location]["lon"]
+        current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
+        if isinstance(current_weather_info, dict):
+            session_state.current_weather_info[selected_location] = current_weather_info
+            for key, value in session_state.current_weather_info[selected_location].items():
+                st.write(f"{key}: {value}")
+        else:
+            st.error("天気情報の取得に失敗しました。")
 
 # n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
-hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)
-if selected_location:
-    latitude = locations[selected_location]["lat"]
-    longitude = locations[selected_location]["lon"]
-    tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
-    if isinstance(tomorrow_weather_info, dict):
-        session_state.tomorrow_weather_info[selected_location] = tomorrow_weather_info
-        for key, value in session_state.tomorrow_weather_info[selected_location].items():
-            st.write(f"{key}: {value}")
-    else:
-        st.error("天気情報の取得に失敗しました。")
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 1, 24, 3)
+if st.button("n時間後の天気情報を取得する", key=2) or st.session_state.count2 == 1:
+    st.session_state.count2 = 1
+    if selected_location:
+        latitude = locations[selected_location]["lat"]
+        longitude = locations[selected_location]["lon"]
+        tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
+        if isinstance(tomorrow_weather_info, dict):
+            session_state.tomorrow_weather_info[selected_location] = tomorrow_weather_info
+            for key, value in session_state.tomorrow_weather_info[selected_location].items():
+                st.write(f"{key}: {value}")
+        else:
+            st.error("天気情報の取得に失敗しました。")
