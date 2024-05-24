@@ -68,6 +68,6 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する") or st.sess
             for key, value in session_state.tomorrow_weather_info[selected_location].items():
                 st.write(f"{key}: {value}")
             # google mapの埋め込み
-            st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")
+            st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})") # リンクを表示
         else:
             st.error("天気情報の取得に失敗しました。")
