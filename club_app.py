@@ -22,14 +22,14 @@ location = st.selectbox("地域を選択してください", list(locations.keys
 # APIキーの取得
 openweathermap_api_key = st.secrets['club']["API_KEY"]
 
-# 天気情報の取得と表示
-if st.button("天気情報を取得する"):
+# 現在の天気情報を表示する領域
+st.header("現在の天気情報")
+if st.button("現在の天気情報を取得する"):
     if location:
         latitude = locations[location]["lat"]
         longitude = locations[location]["lon"]
         current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
-            st.subheader(f"{location}の現在の気象情報:")
             for key, value in current_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
@@ -39,15 +39,15 @@ if st.button("天気情報を取得する"):
     else:
         st.warning("地域を選択してください。")
 
-# n時間後の天気情報の取得と表示 0時間後の天気情報は現在の天気情報と同じ
-hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3) # 引数: (ラベル, 最小値, 最大値, 初期値)
+# n時間後の天気情報を表示する領域
+st.header("n時間後の天気情報")
+hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)
 if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
     if location:
         latitude = locations[location]["lat"]
         longitude = locations[location]["lon"]
         tomorrow_weather_info = wf.get_tomorrow_weather_info(latitude, longitude, openweathermap_api_key, hours_ahead)
         if isinstance(tomorrow_weather_info, dict):
-            st.subheader(f"{location}の{hours_ahead}時間後の気象情報:")
             for key, value in tomorrow_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = wf.generate_google_map_url(latitude, longitude)
