@@ -25,6 +25,7 @@ def get_current_weather_info(latitude, longitude, api_key):
         current_temperature = data['main']['temp']
         current_wind_speed = data['wind']['speed']
         current_wind_direction = convert_wind_direction(data['wind']['deg'])
+        current_weather_icon = data['weather'][0]['icon'] # アイコンのID
 
         # タイムスタンプを日本標準時 (JST) に変換
         utc_timestamp = datetime.fromtimestamp(data['dt'])
@@ -36,7 +37,8 @@ def get_current_weather_info(latitude, longitude, api_key):
             "Current Temperature": f"{current_temperature} ℃",
             "Current Wind Speed": f"{current_wind_speed} m/s",
             "Current Wind Direction": current_wind_direction,
-            "Current Timestamp": current_timestamp
+            "Current Timestamp": current_timestamp,
+            "Current Weather Icon": f"http://openweathermap.org/img/w/{current_weather_icon}.png" # アイコンのURL
         }
     else:
         return "Failed to retrieve current weather information."
