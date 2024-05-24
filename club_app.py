@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 # 関数定義
@@ -25,7 +25,11 @@ def get_current_weather_info(latitude, longitude, api_key):
         current_temperature = data['main']['temp']
         current_wind_speed = data['wind']['speed']
         current_wind_direction = convert_wind_direction(data['wind']['deg'])
-        current_timestamp = datetime.fromtimestamp(data['dt']).strftime('%Y-%m-%d %H:%M:%S')
+
+        # タイムスタンプを日本標準時 (JST) に変換
+        utc_timestamp = datetime.fromtimestamp(data['dt'])
+        jst_timestamp = utc_timestamp + timedelta(hours=9)
+        current_timestamp = jst_timestamp.strftime('%Y-%m-%d %H:%M:%S')
         
         return {
             "Current Weather": current_weather,
@@ -40,21 +44,34 @@ def get_current_weather_info(latitude, longitude, api_key):
 def generate_google_map_url(latitude, longitude):
     return f"https://www.google.com/maps?q={latitude},{longitude}"
 
+# 地域名と緯度・経度の対応辞書
+locations = {
+    "東京": {"lat": 35.682839, "lon": 139.759455},
+    "大阪": {"lat": 34.693737, "lon": 135.502167},
+    "名古屋": {"lat": 35.181446, "lon": 136.906398},
+    "福岡": {"lat": 33.590355, "lon": 130.401716},
+    "札幌": {"lat": 43.062096, "lon": 141.354376},
+    "海づり公園": {"lat": 33.627800, "lon": 130.227800},
+    "松原北": {"lat": 33.578277, "lon": 130.144815},
+}
+
 # streamlitアプリケーションの設定
 st.title("天気情報アプリ")
 
-# 緯度と経度の入力フォーム
-latitude = st.text_input("緯度を入力してください")
-longitude = st.text_input("経度を入力してください")
+# 地域の選択
+location = st.selectbox("地域を選択してください", list(locations.keys()))
 
 # APIキーの取得
 openweathermap_api_key = st.secrets['club']["API_KEY"]
+
 # 天気情報の取得と表示
 if st.button("天気情報を取得する"):
-    if latitude and longitude:
+    if location:
+        latitude = locations[location]["lat"]
+        longitude = locations[location]["lon"]
         current_weather_info = get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
-            st.write("現在の気象情報:")
+            st.write(f"{location}の現在の気象情報:")
             for key, value in current_weather_info.items():
                 st.write(f"{key}: {value}")
             google_map_url = generate_google_map_url(latitude, longitude)
@@ -62,4 +79,4 @@ if st.button("天気情報を取得する"):
         else:
             st.error("天気情報の取得に失敗しました。")
     else:
-        st.warning("緯度と経度を入力してください。")
+        st.warning("地域を選択してください。")
