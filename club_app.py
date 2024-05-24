@@ -34,7 +34,7 @@ openweathermap_api_key = st.secrets['club']["API_KEY"]
 
 # 現在の天気情報を表示する領域
 st.header("現在の天気情報")
-if st.button("現在の天気情報を取得する"):
+if st.button("現在の天気情報を取得する",key=1):
     if location:
         latitude = locations[location]["lat"]
         longitude = locations[location]["lon"]
@@ -53,7 +53,7 @@ if st.button("現在の天気情報を取得する"):
 # n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
 hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)
-if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
+if st.button(f"{hours_ahead}時間後の天気情報を取得する",key=2):
     if location:
         latitude = locations[location]["lat"]
         longitude = locations[location]["lon"]
