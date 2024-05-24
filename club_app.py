@@ -30,16 +30,14 @@ if st.button("現在の天気情報を取得する"):
         longitude = locations[location]["lon"]
         current_weather_info = wf.get_current_weather_info(latitude, longitude, openweathermap_api_key)
         if isinstance(current_weather_info, dict):
-            status1 = 1
+            for key, value in current_weather_info.items():
+                st.write(f"{key}: {value}")
+            google_map_url = wf.generate_google_map_url(latitude, longitude)
+            st.write(f"Google Map URL: {google_map_url}")
         else:
             st.error("天気情報の取得に失敗しました。")
     else:
         st.warning("地域を選択してください。")
-if status1 == 1:
-    for key, value in current_weather_info.items():
-        st.write(f"{key}: {value}")
-    google_map_url = wf.generate_google_map_url(latitude, longitude)
-    st.write(f"Google Map URL: {google_map_url}")
 
 # n時間後の天気情報を表示する領域
 st.header("n時間後の天気情報")
