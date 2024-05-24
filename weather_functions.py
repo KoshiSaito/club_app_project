@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime, timedelta
+import random
 
 # 関数定義
 def convert_wind_direction(deg):
@@ -77,3 +78,7 @@ def get_tomorrow_weather_info(latitude, longitude, api_key, hours_ahead):
 
 def generate_google_map_url(latitude, longitude):
     return f"https://www.google.com/maps?q={latitude},{longitude}"
+
+def get_fortune():
+    fortunes = ["大吉", "中吉", "小吉", "吉", "末吉", "凶", "大凶"]
+    return f"今日の運勢: {fortunes[random.randint(0, len(fortunes)-1)]}"
