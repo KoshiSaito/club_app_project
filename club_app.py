@@ -43,7 +43,7 @@ if selected_location != session_state.selected_location:
 
 # 現在の天気情報を表示する領域
 st.header("現在の天気情報")
-if st.button("現在の天気情報を取得する", key=1) or st.session_state.currentbutton_status == 1:
+if st.button("現在の天気情報を取得する", key=1):
     st.session_state.currentbutton_status = 1
     if session_state.selected_location:
         latitude = locations[session_state.selected_location]["lat"]
