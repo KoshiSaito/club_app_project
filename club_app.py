@@ -43,7 +43,7 @@ if selected_location != session_state.selected_location:
 
 # 現在の天気情報を表示する領域
 st.header("現在の天気情報")
-if st.button("現在の天気情報を取得する", key=1):
+if st.button("現在の天気情報を取得する", key=1) or st.session_state.currentbutton_status == 1:
     st.session_state.currentbutton_status = 1
     if session_state.selected_location:
         latitude = locations[session_state.selected_location]["lat"]
@@ -64,7 +64,7 @@ if st.button("現在の天気情報を取得する", key=1):
 st.header("n時間後の天気情報")
 hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)  # 引数：(ラベル, 最小値, 最大値, 初期値, ステップ)
 # n時間後の天気情報を取得するボタン ボタンの表示は入力によって変わる
-if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
+if st.button(f"{hours_ahead}時間後の天気情報を取得する") or st.session_state.forecastbutton_status == 1:
     st.session_state.forecastbutton_status = 1
     if session_state.selected_location:
         latitude = locations[session_state.selected_location]["lat"]
@@ -78,3 +78,11 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
             st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")  # リンクを表示
         else:
             st.error("天気情報の取得に失敗しました。")
+
+# わかりやすく可視化
+st.header("天気情報の可視化")
+if session_state.selected_location:
+    latitude = locations[session_state.selected_location]["lat"]
+    longitude = locations[session_state.selected_location]["lon"]
+    wf.visualize_weather_info(latitude, longitude, openweathermap_api_key)
+    st.image("weather_info.png", width=500)
