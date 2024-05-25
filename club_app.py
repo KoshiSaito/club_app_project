@@ -78,11 +78,3 @@ if st.button(f"{hours_ahead}時間後の天気情報を取得する") or st.sess
             st.write(f"Google Map: [Link]({wf.generate_google_map_url(latitude, longitude)})")  # リンクを表示
         else:
             st.error("天気情報の取得に失敗しました。")
-
-# わかりやすく可視化
-st.header("天気情報の可視化")
-if session_state.selected_location:
-    latitude = locations[session_state.selected_location]["lat"]
-    longitude = locations[session_state.selected_location]["lon"]
-    wf.visualize_weather_info(latitude, longitude, openweathermap_api_key)
-    st.image("weather_info.png", width=500)
