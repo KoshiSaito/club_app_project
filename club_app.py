@@ -9,6 +9,10 @@ if 'current_weather_info' not in session_state:
     session_state.current_weather_info = {}
 if 'tomorrow_weather_info' not in session_state:
     session_state.tomorrow_weather_info = {}
+if 'currentbutton_status' not in session_state:
+    session_state.currentbutton_status = 0
+if 'forecastbutton_status' not in session_state:
+    session_state.forecastbutton_status = 0
 if 'selected_location' not in session_state:
     session_state.selected_location = None
 
@@ -40,6 +44,7 @@ if selected_location != session_state.selected_location:
 # 現在の天気情報を表示する領域
 st.header("現在の天気情報")
 if st.button("現在の天気情報を取得する", key=1):
+    st.session_state.currentbutton_status = 1
     if session_state.selected_location:
         latitude = locations[session_state.selected_location]["lat"]
         longitude = locations[session_state.selected_location]["lon"]
@@ -60,6 +65,7 @@ st.header("n時間後の天気情報")
 hours_ahead = st.slider("何時間後の天気情報を取得しますか？", 0, 24, 0, step=3)  # 引数：(ラベル, 最小値, 最大値, 初期値, ステップ)
 # n時間後の天気情報を取得するボタン ボタンの表示は入力によって変わる
 if st.button(f"{hours_ahead}時間後の天気情報を取得する"):
+    st.session_state.forecastbutton_status = 1
     if session_state.selected_location:
         latitude = locations[session_state.selected_location]["lat"]
         longitude = locations[session_state.selected_location]["lon"]
